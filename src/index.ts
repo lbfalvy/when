@@ -11,6 +11,7 @@ import race from "./race"
 import timeout from "./timeout"
 import { tap } from "./tap"
 import { Thenable } from "./Thenable"
+import isXPromise from "./core/isXPromise"
 
 function when(timeout: number): XPromise<void>
 function when<T>(): [XPromise<T>, Resolve<T>, Reject, XPromise<void>]
@@ -63,5 +64,6 @@ export {
     tap,
     all, race, allSettled,
     resolve, reject, cancel,
+    isXPromise,
     Thenable, XPromise
 }
