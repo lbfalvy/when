@@ -1,7 +1,7 @@
 import { AnySettledState } from "./core/BaseState"
 import xPromise from "./core/xpromise"
 import { XPromise } from "./core/types"
-import { Thenable } from "./PromiseArrayToArray"
+import { Thenable } from "./Thenable"
 
 type SettledResult<T> = 
     | {
@@ -28,15 +28,16 @@ export default function allSettled<T0, T1>(input: [Thenable<T0>, Thenable<T1>]):
 export default function allSettled<T0, T1, T2>(input: [Thenable<T0>, Thenable<T1>, Thenable<T2>]): XPromise<[SettledResult<T0>, SettledResult<T1>, SettledResult<T2>]>;
 export default function allSettled<T0, T1, T2, T3>(input: [Thenable<T0>, Thenable<T1>, Thenable<T2>, Thenable<T3>]): XPromise<[SettledResult<T0>, SettledResult<T1>, SettledResult<T2>, SettledResult<T3>]>;
 export default function allSettled<T0, T1, T2, T3, T4>(input: [Thenable<T0>, Thenable<T1>, Thenable<T2>, Thenable<T3>, Thenable<T4>]): XPromise<[SettledResult<T0>, SettledResult<T1>, SettledResult<T2>, SettledResult<T3>, SettledResult<T4>]>;
-export default function allSettled<T extends (XPromise<any> | Thenable<any>)[]>(input: T): XPromise<AllSettledResult<T>> {
+export default function allSettled<T>(input: (T | Thenable<T>)[]): XPromise<SettledResult<T>[]>
+export default function allSettled<T>(input: (T | Promise<T> | XPromise<T>)[]): XPromise<SettledResult<T>[]> {
     return xPromise(resolve => {
         let settledCount = 0
-        const results: AllSettledResult<T> = new Array(input.length)
+        const results: SettledResult<T>[] = new Array(input.length)
         const afterSettle = () => {
             settledCount++
             if (settledCount == input.length) resolve(results)
         }
-        const resolveHandler = (i: number, value: any) => {
+        const resolveHandler = (i: number, value: T) => {
             results[i] = { status: 'fulfilled', value }
             afterSettle()
         }
@@ -44,7 +45,7 @@ export default function allSettled<T extends (XPromise<any> | Thenable<any>)[]>(
             results[i] = { status: 'rejected', reason }
             afterSettle()
         }
-        const settleHandler = (i: number, state: AnySettledState<any>) => {
+        const settleHandler = (i: number, state: AnySettledState<T>) => {
             if (state.status == 'fulfilled') resolveHandler(i, state.value)
             else if (state.status == 'rejected') rejectHandler(i, state.reason)
             else if (state.status == 'cancelled') {

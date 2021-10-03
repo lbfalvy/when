@@ -7,7 +7,6 @@ import { Executor } from "./core/handleExecutor"
 import xPromise, { eagerXPromise, flatXPromise } from "./core/xpromise"
 import { XPromise, XPromiseBase } from "./core/types"
 import event, { AnyEventTarget } from "./event"
-import PromiseArrayToArray from "./PromiseArrayToArray"
 import race from "./race"
 import timeout from "./timeout"
 import { tap } from "./tap"
@@ -36,10 +35,10 @@ interface When {
     reject(e: any): XPromiseBase<any> & Rejected
     cancel(): XPromiseBase<any> & Cancelled
     tap: typeof tap
-    cb<T, Argv extends any[]>(f: (...args: [...Argv, (e: any, res: T) => void]) => any, ...args: Argv): T
-    all<T extends Promise<any>[]>(input: T): XPromise<PromiseArrayToArray<T>>
-    race<T extends Promise<any>[]>(input: T): XPromise<PromiseArrayToArray<T>[number]>
-    allSettled<T extends Promise<any>[]>(input: T): XPromise<AllSettledResult<T>>
+    cb: typeof callback
+    all: typeof all
+    race: typeof race
+    allSettled: typeof allSettled
 }
 const resolve = <T>(v: T) => xPromise<T>(resolve => resolve(v))
 const reject = (e: any) => xPromise((_, reject) => reject(e))
@@ -48,7 +47,7 @@ const cancel = () => {
     p.cancel()
     return p
 }
-Object.assign(when, {
+const mainFunc = Object.assign(when, {
     eager: eagerXPromise,
     cb: callback,
     tap,
@@ -57,7 +56,7 @@ Object.assign(when, {
 } as When)
 
 export {
-    when,
+    mainFunc as when,
     eagerXPromise as eager,
     callback as cb,
     tap,

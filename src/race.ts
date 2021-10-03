@@ -1,8 +1,8 @@
 import xPromise from "./core/xpromise";
-import PromiseArrayToArray from "./PromiseArrayToArray";
+import { Thenable } from "./Thenable";
 import { XPromise } from "./core/types";
 
-export default function race<T extends (Promise<any> | XPromise<any>)[]>(input: T): XPromise<PromiseArrayToArray<T>[number]> {
+export default function race<T>(input: (T | Thenable<T> | XPromise<T>)[]): XPromise<T> {
     return xPromise((resolve, reject) => {
         let rejectedCount = 0;
         const errors: any[] = new Array(input.length)
@@ -16,7 +16,7 @@ export default function race<T extends (Promise<any> | XPromise<any>)[]>(input: 
                 p.then(resolve, r => errorHandler(i, r), 'sync')
             } else if (p instanceof Promise) {
                 p.then(resolve, r => errorHandler(i, r))
-            }
+            } else resolve(p as T)
         })
     })
 }

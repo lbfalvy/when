@@ -1,5 +1,5 @@
 import xPromise from "./core/xpromise";
-import PromiseArrayToArray, { Thenable } from "./PromiseArrayToArray";
+import { Thenable } from "./Thenable";
 import { XPromise } from "./core/types";
 
 /*
@@ -18,11 +18,12 @@ export default function all<T0, T1, T2, T3, T4, T5, T6>(input: [Thenable<T0>, Th
 export default function all<T0, T1, T2, T3, T4, T5, T6, T7>(input: [Thenable<T0>, Thenable<T1>, Thenable<T2>, Thenable<T3>, Thenable<T4>, Thenable<T5>, Thenable<T6>, Thenable<T7>]): XPromise<[T0, T1, T2, T3, T4, T5, T6, T7]>;
 export default function all<T0, T1, T2, T3, T4, T5, T6, T7, T8>(input: [Thenable<T0>, Thenable<T1>, Thenable<T2>, Thenable<T3>, Thenable<T4>, Thenable<T5>, Thenable<T6>, Thenable<T7>, Thenable<T8>]): XPromise<[T0, T1, T2, T3, T4, T5, T6, T7, T8]>;
 export default function all<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>(input: [Thenable<T0>, Thenable<T1>, Thenable<T2>, Thenable<T3>, Thenable<T4>, Thenable<T5>, Thenable<T6>, Thenable<T7>, Thenable<T8>, Thenable<T9>]): XPromise<[T0, T1, T2, T3, T4, T5, T6, T7, T8, T9]>;
-export default function all<T extends (Promise<any> | XPromise<any>)[]>(input: T): XPromise<PromiseArrayToArray<T>> {
+export default function all<T>(input: (T | Thenable<T>)[]): XPromise<T[]>
+export default function all<T>(input: (T | Promise<T> | XPromise<T>)[]): XPromise<T[]> {
     return xPromise((resolve, reject) => {
         let resolvedCount = 0;
-        const results: any[] = new Array(input.length)
-        const fulfillHandler = (i: number, r: any) => {
+        const results: T[] = new Array(input.length)
+        const fulfillHandler = (i: number, r: T) => {
             results[i] = r
             resolvedCount++
             if (resolvedCount == input.length) resolve(results)
