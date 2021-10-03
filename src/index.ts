@@ -10,6 +10,7 @@ import event, { AnyEventTarget } from "./event"
 import race from "./race"
 import timeout from "./timeout"
 import { tap } from "./tap"
+import { Thenable } from "./Thenable"
 
 function when(timeout: number): XPromise<void>
 function when<T>(): [XPromise<T>, Resolve<T>, Reject, XPromise<void>]
@@ -61,5 +62,6 @@ export {
     callback as cb,
     tap,
     all, race, allSettled,
-    resolve, reject, cancel
+    resolve, reject, cancel,
+    Thenable, XPromise
 }
