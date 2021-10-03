@@ -10,6 +10,7 @@ import event, { AnyEventTarget } from "./event"
 import PromiseArrayToArray from "./PromiseArrayToArray"
 import race from "./race"
 import timeout from "./timeout"
+import { tap } from "./tap"
 
 function when(timeout: number): XPromise<void>
 function when<T>(): [XPromise<T>, Resolve<T>, Reject, XPromise<void>]
@@ -34,6 +35,7 @@ interface When {
     resolve<T>(value: T): XPromiseBase<T> & Fulfilled<T>
     reject(e: any): XPromiseBase<any> & Rejected
     cancel(): XPromiseBase<any> & Cancelled
+    tap: typeof tap
     cb<T, Argv extends any[]>(f: (...args: [...Argv, (e: any, res: T) => void]) => any, ...args: Argv): T
     all<T extends Promise<any>[]>(input: T): XPromise<PromiseArrayToArray<T>>
     race<T extends Promise<any>[]>(input: T): XPromise<PromiseArrayToArray<T>[number]>
@@ -47,9 +49,10 @@ const cancel = () => {
     return p
 }
 Object.assign(when, {
-    all, race, allSettled,
     eager: eagerXPromise,
     cb: callback,
+    tap,
+    all, race, allSettled,
     resolve, reject, cancel
 } as When)
 
@@ -57,6 +60,7 @@ export {
     when,
     eagerXPromise as eager,
     callback as cb,
+    tap,
     all, race, allSettled,
     resolve, reject, cancel
 }
