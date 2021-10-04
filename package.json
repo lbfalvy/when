@@ -1,6 +1,6 @@
 {
   "name": "@lbfalvy/when",
-  "version": "1.0.4",
+  "version": "2.0.1",
   "description": "Everything you were missing from Promises",
   "main": "build/index.js",
   "module": "build/index.esm.js",

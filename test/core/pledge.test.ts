@@ -5,7 +5,7 @@ describe('XPromise function and two variants', () => {
         const ex = jest.fn()
         const p = xPromise(ex)
         expect(ex).toHaveBeenCalledTimes(0)
-        p.then(null, null, 'sync')
+        p.execute()
         expect(ex).toHaveBeenCalledTimes(1)
     })
 

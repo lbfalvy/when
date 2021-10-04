@@ -15,7 +15,7 @@ export default function race<T>(input: (T | Thenable<T> | XPromise<T>)[]): XProm
             if ('typeid' in p && p.typeid == 'XPromise') {
                 p.then(resolve, r => errorHandler(i, r), 'sync')
             } else if (p instanceof Promise) {
-                p.then(resolve, r => errorHandler(i, r))
+                p.then(resolve, r => errorHandler(i, r)).catch(() => {})
             } else resolve(p as T)
         })
     })

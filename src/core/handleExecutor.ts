@@ -64,16 +64,19 @@ export default function handleExecutor<T>(
             : promise.status == 'rejected' ? { status: 'rejected', reason: promise.reason }
             : promise.status == 'cancelled' ? { status: 'cancelled' } : { status: 'pending' }
     }
+    let rejectionHandled = false
     let settle: XPromise<AnySettledState<T>>|undefined
     const promise = Object.defineProperties(basePromise, {
         status: { get: () => status[0] },
         value: { get: () => value },
         reason: { get: () => reason },
+        rejectionHandled: { get: () => rejectionHandled },
         settle: { get: () => {
             if (settle) return settle
             const [fresh, resolve] = flatXPromise<AnySettledState<T>>()
             settle = fresh
             promise.catch(() => {}) // Waiting for a settle also handles rejections
+            rejectionHandled = true
             if (status[0] !== 'pending') resolve(getState() as AnySettledState<T>)
             else onStatus(() => resolve(getState() as AnySettledState<T>))
             return fresh

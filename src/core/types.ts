@@ -3,6 +3,7 @@ import { AnySettledState, AnyState } from "./BaseState"
 export type Handler<T, U> = ((t: T) => U | Promise<U> | XPromise<U>) | null | undefined
 
 export type ExposedState<T> = AnyState<T> & {
+    readonly rejectionHandled: boolean
     readonly settle: XPromise<AnySettledState<T>>
 }
 
@@ -12,6 +13,7 @@ export interface XPromiseBase<T> extends Promise<T> {
         rejected?: Handler<any, V>,
         sync?: 'sync'|void
     ): XPromise<U | V>
+    execute(): XPromise<T>
 }
 
 export interface PromiseUtils<T> {

@@ -9,7 +9,7 @@ describe('Promise.all but with xpromise support', () => {
             xPromise<string>(resolve => resolve('foo')),
             xPromise<string>(resolve => resolve('bar'))
         ])
-        a.then(null, null, 'sync')
+        a.execute()
         expect(a.status).toBe('fulfilled')
         expect(a.value).toEqual(['foo', 'bar'])
     })
@@ -26,7 +26,7 @@ describe('Promise.all but with xpromise support', () => {
             [xPromise, xResolve, xReject] = flatXPromise<string>();
             [promise, promiseResolve, promiseReject] = flatPromise<string>()
             allPromise = all([promise, xPromise])
-            allPromise.then(null, null, 'sync') // Necessary to avoid problems with laziness
+            allPromise.execute()
         })
         test('resolves when xpromise resolves last', async () => {
             promiseResolve('foo')
@@ -51,8 +51,9 @@ describe('Promise.all but with xpromise support', () => {
             expect(allPromise.status).toBe('rejected')
             expect(allPromise.reason).toBe('booz')
         })
-        test('Rejects when xpromise rejects', async () => {
-            allPromise.catch(() => {})
+        test('Rejects when xpromise rejects', () => {
+            allPromise.catch(() => {}, 'sync')
+            xPromise.catch(() => {}, 'sync')
             xReject('bizzfuz')
             expect(allPromise.status).toBe('rejected')
             expect(allPromise.reason).toBe('bizzfuz')

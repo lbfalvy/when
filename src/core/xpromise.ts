@@ -3,14 +3,21 @@ import { Reject, Resolve } from "./flatPromise"
 import handleExecutor, { Executor } from "./handleExecutor"
 import runHandler from "./runHandler"
 import { Handler, XPromise, XPromiseBase } from "./types"
+import UnhandledRejectionError from "./UnhandledRejectionError"
 
 export default function xPromise<T>(executor: Executor<T>, eager = false): XPromise<T> {
     const { promise, execute, onStatus, cancel } = handleExecutor(executor, flatXPromise)
+    let thenCalled = false
     if (eager) execute()
-    return addPromiseMethods(Object.setPrototypeOf({
+    onStatus(() => {
+        if (promise.status == 'rejected' && !thenCalled && !promise.rejectionHandled)
+            throw new UnhandledRejectionError(promise.reason)
+    })
+    const xpromise: XPromise<T> = addPromiseMethods(Object.setPrototypeOf({
         then<U, V>(onfulfilled: Handler<T, U>, onrejected: Handler<any, V>, sync: 'sync'|void) {
-            if (onrejected) promise.catch(() => {})
-            // Eliminate unhandled promise rejections which may crash node if a handler is provided here.
+            // Eliminate unhandled promise rejections.
+            thenCalled = true
+            promise.catch(() => {})
             const [rval, resolve, reject, onCancel] = flatXPromise<U | V>()
             const react = () => {
                 switch (promise.status) {
@@ -18,7 +25,8 @@ export default function xPromise<T>(executor: Executor<T>, eager = false): XProm
                         onCancel(runHandler(onfulfilled, promise.value, resolve, reject))
                         break;
                     case 'rejected':
-                        onCancel(runHandler(onrejected, promise.reason, resolve, reject))
+                        if (onrejected) onCancel(runHandler(onrejected, promise.reason, resolve, reject))
+                        else reject(promise.reason)
                         break;
                     default: break;
                 }
@@ -28,13 +36,17 @@ export default function xPromise<T>(executor: Executor<T>, eager = false): XProm
             else onStatus(handler)
             execute()
             return rval
+        },
+        execute() {
+            execute()
+            return xpromise
         }
     } as XPromiseBase<T>, promise), cancel)
+    return xpromise
 }
 
 export function eagerXPromise<T>(executor: Executor<T>): XPromise<T> {
-    const p = xPromise(executor, true)
-    return p
+    return xPromise(executor, true)
 }
 
 export function flatXPromise<T>(): [XPromise<T>, Resolve<T>, Reject, (f: () => any) => any] {

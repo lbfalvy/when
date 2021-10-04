@@ -5,6 +5,6 @@ describe('Waits a given number of miliseconds before resolving', () => {
         const start = Date.now()
         await timeout(1000)
         const end = Date.now()
-        expect(start + 1000).toBeCloseTo(end, -1)
+        expect(start + 1000).toBeCloseTo(end, -2)
     })
 })

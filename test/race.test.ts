@@ -9,7 +9,7 @@ describe('Promise.race but with xpromise support', () => {
             xPromise<string>(resolve => resolve('foo')),
             xPromise<string>(resolve => resolve('bar'))
         ])
-        a.then(null, null, 'sync')
+        a.execute()
         expect(a.status).toBe('fulfilled')
         expect(a.value).toEqual('foo')
     })
@@ -20,13 +20,13 @@ describe('Promise.race but with xpromise support', () => {
         let xResolve: (t: string) => void
         let xReject: (e: any) => void
         let xpromise: XPromise<string>
-        let racePromise: XPromise<[string, string]>
+        let racePromise: XPromise<string>
 
         beforeEach(() => {
             [xpromise, xResolve, xReject] = flatXPromise<string>();
             [promise, promiseResolve, promiseReject] = flatPromise<string>()
             racePromise = race([promise, xpromise])
-            racePromise.then(null, null, 'sync') // Necessary to avoid problems with laziness
+            racePromise.execute() // Necessary to avoid problems with laziness
         })
         test('rejects when xpromise rejects last', async () => {
             racePromise.catch(() => {})
