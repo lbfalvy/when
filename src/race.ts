@@ -8,11 +8,11 @@ export default function race<T>(input: (T | Thenable<T> | XPromise<T>)[]): XProm
         const errors: any[] = new Array(input.length)
         const errorHandler = (i: number, r: any) => {
             errors[i] = r
-            rejectedCount++
-            if (rejectedCount == input.length) reject(errors)
+            if (++rejectedCount == input.length) reject(errors)
         }
         input.forEach((p, i) => {
-            if ('typeid' in p && p.typeid == 'XPromise') {
+            if (typeof p !== 'object') resolve(p as T)
+            else if ('typeid' in p && p.typeid == 'XPromise') {
                 p.then(resolve, r => errorHandler(i, r), 'sync')
             } else if (p instanceof Promise) {
                 p.then(resolve, r => errorHandler(i, r)).catch(() => {})

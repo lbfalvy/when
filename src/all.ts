@@ -25,11 +25,11 @@ export default function all<T>(input: (T | Promise<T> | XPromise<T>)[]): XPromis
         const results: T[] = new Array(input.length)
         const fulfillHandler = (i: number, r: T) => {
             results[i] = r
-            resolvedCount++
-            if (resolvedCount == input.length) resolve(results)
+            if (++resolvedCount == input.length) resolve(results)
         }
         input.forEach((p, i) => {
-            if ('typeid' in p && p.typeid == 'XPromise') {
+            if (typeof p !== 'object') fulfillHandler(i, p)
+            else if ('typeid' in p && p.typeid == 'XPromise') {
                 p.then(r => fulfillHandler(i, r), reject, 'sync')
             } else if (p instanceof Promise) {
                 p.then(r => fulfillHandler(i, r), reject).catch(() => {})

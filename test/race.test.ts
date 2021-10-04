@@ -10,8 +10,12 @@ describe('Promise.race but with xpromise support', () => {
             xPromise<string>(resolve => resolve('bar'))
         ])
         a.execute()
-        expect(a.status).toBe('fulfilled')
         expect(a.value).toEqual('foo')
+    })
+    test('resolves with a string', () => {
+        const a = race(['foo'])
+        a.execute()
+        expect(a.value).toBe('foo')
     })
     describe('mixed argument array of promises and xpromises', () => {
         let promiseResolve: (t: string) => void
@@ -34,7 +38,6 @@ describe('Promise.race but with xpromise support', () => {
             await Promise.resolve() // Roll mtq
             expect(racePromise.status).toBe('pending')
             xReject('bar')
-            expect(racePromise.status).toBe('rejected')
             expect(racePromise.reason).toEqual(['foo', 'bar'])
         })
         test('rejects when promise rejects last', async () => {
@@ -43,18 +46,15 @@ describe('Promise.race but with xpromise support', () => {
             expect(racePromise.status).toBe('pending')
             promiseReject('far')
             await Promise.resolve()
-            expect(racePromise.status).toBe('rejected')
             expect(racePromise.reason).toEqual(['far', 'boo'])
         })
         test('Resolves when promise resolves', async () => {
             promiseResolve('booz')
             await Promise.resolve()
-            expect(racePromise.status).toBe('fulfilled')
             expect(racePromise.value).toBe('booz')
         })
         test('Resolves when xpromise resolves', async () => {
             xResolve('bizzfuz')
-            expect(racePromise.status).toBe('fulfilled')
             expect(racePromise.value).toBe('bizzfuz')
         })
     })

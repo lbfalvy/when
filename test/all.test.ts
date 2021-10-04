@@ -10,8 +10,12 @@ describe('Promise.all but with xpromise support', () => {
             xPromise<string>(resolve => resolve('bar'))
         ])
         a.execute()
-        expect(a.status).toBe('fulfilled')
         expect(a.value).toEqual(['foo', 'bar'])
+    })
+    test('resolves with a concrete string', () => {
+        const a = all(['foo'])
+        a.execute()
+        expect(a.value).toEqual(['foo'])
     })
     describe('mixed argument array of promises and xpromises', () => {
         let promiseResolve: (t: string) => void
@@ -33,7 +37,6 @@ describe('Promise.all but with xpromise support', () => {
             await Promise.resolve() // Roll mtq
             expect(allPromise.status).toBe('pending')
             xResolve('bar')
-            expect(allPromise.status).toBe('fulfilled')
             expect(allPromise.value).toEqual(['foo', 'bar'])
         })
         test('resolves when promise resolves last', async () => {
@@ -41,21 +44,18 @@ describe('Promise.all but with xpromise support', () => {
             expect(allPromise.status).toBe('pending')
             promiseResolve('far')
             await Promise.resolve()
-            expect(allPromise.status).toBe('fulfilled')
             expect(allPromise.value).toEqual(['far', 'boo'])
         })
         test('Rejects when promise rejects', async () => {
             allPromise.catch(() => {})
             promiseReject('booz')
             await Promise.resolve()
-            expect(allPromise.status).toBe('rejected')
             expect(allPromise.reason).toBe('booz')
         })
         test('Rejects when xpromise rejects', () => {
             allPromise.catch(() => {}, 'sync')
             xPromise.catch(() => {}, 'sync')
             xReject('bizzfuz')
-            expect(allPromise.status).toBe('rejected')
             expect(allPromise.reason).toBe('bizzfuz')
         })
     })
