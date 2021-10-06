@@ -12,7 +12,6 @@ import timeout from "./timeout"
 import { tap } from "./tap"
 import { Thenable } from "./Thenable"
 import isXPromise from "./core/isXPromise"
-import UnhandledRejectionError from "./core/UnhandledRejectionError"
 
 function when(timeout: number): XPromise<void>
 function when<T>(): [XPromise<T>, Resolve<T>, Reject, XPromise<void>]
@@ -43,7 +42,6 @@ interface When {
     race: typeof race
     allSettled: typeof allSettled
     isXPromise: typeof isXPromise
-    UnhandledRejectionError: { new(reason: any): UnhandledRejectionError }
 }
 const resolve = <T>(v: T) => xPromise<T>(resolve => resolve(v))
 const reject = (e: any) => xPromise((_, reject) => reject(e))
@@ -58,8 +56,7 @@ const mainFunc = Object.assign(when, {
     tap,
     all, race, allSettled,
     resolve, reject, cancel,
-    isXPromise,
-    UnhandledRejectionError
+    isXPromise
 } as When)
 
 export {
@@ -70,6 +67,5 @@ export {
     all, race, allSettled,
     resolve, reject, cancel,
     isXPromise,
-    Thenable, XPromise,
-    UnhandledRejectionError
+    Thenable, XPromise
 }

@@ -3,16 +3,11 @@ import { Reject, Resolve } from "./flatPromise"
 import handleExecutor, { Executor } from "./handleExecutor"
 import runHandler from "./runHandler"
 import { Handler, XPromise, XPromiseBase } from "./types"
-import UnhandledRejectionError from "./UnhandledRejectionError"
 
 export default function xPromise<T>(executor: Executor<T>, eager = false): XPromise<T> {
     const { promise, execute, onStatus, cancel } = handleExecutor(executor, flatXPromise)
     let thenCalled = false
     if (eager) execute()
-    onStatus(() => {
-        if (promise.status == 'rejected' && !thenCalled && !promise.rejectionHandled)
-            throw new UnhandledRejectionError(promise.reason)
-    })
     const xpromise: XPromise<T> = addPromiseMethods(Object.setPrototypeOf({
         then<U, V>(onfulfilled: Handler<T, U>, onrejected: Handler<any, V>, sync: 'sync'|void) {
             // Eliminate unhandled promise rejections.
