@@ -1,4 +1,4 @@
-import callback from "../src/callback"
+import { callback } from "../src/callback"
 
 describe('Promisifies Node-style callback interfaces', () => {
     test('resolve path', () => {

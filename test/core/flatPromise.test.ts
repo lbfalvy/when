@@ -1,4 +1,4 @@
-import flatPromise from "../../src/core/flatPromise"
+import { flatPromise } from "../../src/core/flatPromise"
 
 // This test suite only exists to make sure that Promise calls its executor synchronously.
 describe('A little utility to obtain all parts of a promise', () => {

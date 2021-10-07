@@ -1,4 +1,4 @@
-import xPromise, { eagerXPromise, flatXPromise } from "../../src/core/xpromise"
+import { xPromise, eagerXPromise, flatXPromise } from "../../src/core/xpromise"
 
 describe('XPromise function and two variants', () => {
     test('executor called synchronously when then is called', () => {

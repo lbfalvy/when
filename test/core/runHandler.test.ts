@@ -1,4 +1,4 @@
-import runHandler from "../../src/core/runHandler"
+import { runHandler } from "../../src/core/runHandler"
 
 describe('Executes a handler and triggers resolve/reject appropriately', () => {
     test('Relays the argument to the handler', () => {

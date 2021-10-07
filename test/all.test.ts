@@ -1,6 +1,6 @@
-import all from "../src/all"
-import flatPromise from "../src/core/flatPromise"
-import xPromise, { flatXPromise } from "../src/core/xpromise"
+import { all } from "../src/all"
+import { flatPromise } from "../src/core/flatPromise"
+import { xPromise, flatXPromise } from "../src/core/xpromise"
 import { XPromise } from "../src/core/types"
 
 describe('Promise.all but with xpromise support', () => {

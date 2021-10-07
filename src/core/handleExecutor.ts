@@ -1,6 +1,6 @@
 import { AnySettledState, AnyState, SettledStatus, Status } from "./BaseState"
-import flatPromise, { Reject, Resolve } from "./flatPromise"
-import isXPromise from "./isXPromise"
+import { flatPromise, Reject, Resolve } from "./flatPromise"
+import { isXPromise } from "./isXPromise"
 import { variable, Subscribe } from '@lbfalvy/mini-events'
 import { ExposedState, XPromise } from "./types"
 
@@ -11,7 +11,7 @@ type TypedPropertyDescriptorMap<T> = {
     [P in string & keyof T]: TypedPropertyDescriptor<T[P]>
 }
 
-export default function handleExecutor<T>(
+export function handleExecutor<T>(
     executor: Executor<T>,
     flatXPromise: <T>() => [XPromise<T>, Resolve<T>, Reject, (f: () => any) => void]
 ): {

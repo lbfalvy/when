@@ -1,7 +1,7 @@
 import { Reject, Resolve } from "./flatPromise"
 import { Handler } from "./types"
 
-export default function runHandler<T, U>(
+export function runHandler<T, U>(
     f: Handler<T, U>, arg: T,
     resolve: Resolve<U>, reject: Reject
 ): () => void {

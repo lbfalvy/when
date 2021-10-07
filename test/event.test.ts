@@ -1,4 +1,4 @@
-import event from "../src/event"
+import { event } from "../src/event"
 
 type MockEventTarget<T extends string, K extends string> = {
     [P in T | K]: (name: string, cb: (ev: any) => any) => void

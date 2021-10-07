@@ -1,4 +1,4 @@
-import handleExecutor from "../../src/core/handleExecutor"
+import { handleExecutor } from "../../src/core/handleExecutor"
 import { XPromise } from "../../src/core/types"
 
 type AnyFunc = (...args: any[]) => any

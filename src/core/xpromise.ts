@@ -1,11 +1,11 @@
 import { event } from "@lbfalvy/mini-events"
-import addPromiseMethods from "./addPromiseMethods"
+import { addPromiseMethods } from "./addPromiseMethods"
 import { Reject, Resolve } from "./flatPromise"
-import handleExecutor, { Executor } from "./handleExecutor"
-import runHandler from "./runHandler"
+import { handleExecutor, Executor } from "./handleExecutor"
+import { runHandler } from "./runHandler"
 import { Handler, XPromise, XPromiseBase } from "./types"
 
-export default function xPromise<T>(executor: Executor<T>, eager = false): XPromise<T> {
+export function xPromise<T>(executor: Executor<T>, eager = false): XPromise<T> {
     const { promise, execute, onStatus, cancel } = handleExecutor(executor, flatXPromise)
     if (eager) execute()
     const xpromise: XPromise<T> = addPromiseMethods(Object.setPrototypeOf({

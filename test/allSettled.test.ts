@@ -1,5 +1,5 @@
-import allSettled from "../src/allSettled"
-import flatPromise from "../src/core/flatPromise"
+import { allSettled } from "../src/allSettled"
+import { flatPromise } from "../src/core/flatPromise"
 import { flatXPromise } from "../src/core/xpromise"
 
 describe('Promise.allSettled for xpromises', () => {

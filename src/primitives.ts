@@ -1,4 +1,4 @@
-import xPromise from "./core/xpromise"
+import { xPromise } from "./core/xpromise"
 
 export const resolve = <T>(v: T) => xPromise<T>(resolve => resolve(v))
 export const reject = (e: any) => xPromise((_, reject) => reject(e))

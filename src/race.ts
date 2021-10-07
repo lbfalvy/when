@@ -1,8 +1,8 @@
-import xPromise from "./core/xpromise";
+import { xPromise } from "./core/xpromise";
 import { Thenable } from "./Thenable";
 import { XPromise } from "./core/types";
 
-export default function race<T>(input: (T | Thenable<T> | XPromise<T>)[]): XPromise<T> {
+export function race<T>(input: (T | Thenable<T> | XPromise<T>)[]): XPromise<T> {
     return xPromise((resolve, reject) => {
         let rejectedCount = 0;
         const errors: any[] = new Array(input.length)

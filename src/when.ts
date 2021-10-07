@@ -1,17 +1,17 @@
-import all from "./all"
-import allSettled from "./allSettled"
-import callback from "./callback"
+import { all } from "./all"
+import { allSettled } from "./allSettled"
+import { callback } from "./callback"
 import { Cancelled, Fulfilled, Rejected } from "./core/BaseState"
 import { Reject, Resolve } from "./core/flatPromise"
 import { Executor } from "./core/handleExecutor"
-import isXPromise from "./core/isXPromise"
+import { isXPromise } from "./core/isXPromise"
 import { XPromise, XPromiseBase } from "./core/types"
-import xPromise, { eagerXPromise, flatXPromise } from "./core/xpromise"
-import event, { AnyEventTarget } from "./event"
+import { xPromise, eagerXPromise, flatXPromise } from "./core/xpromise"
+import { event, AnyEventTarget } from "./event"
 import { cancel, reject, resolve } from "./primitives"
-import race from "./race"
+import { race } from "./race"
 import { tap } from "./tap"
-import timeout from "./timeout"
+import { timeout } from "./timeout"
 
 function when(timeout: number): XPromise<void>
 function when<T>(): [XPromise<T>, Resolve<T>, Reject, XPromise<void>]
@@ -53,4 +53,4 @@ const mainFunc = Object.assign(when, {
     isXPromise
 } as When)
 
-export { mainFunc as default }
+export { mainFunc as when }

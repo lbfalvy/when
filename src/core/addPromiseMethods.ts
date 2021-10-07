@@ -1,6 +1,6 @@
 import { ExposedState, XPromise, XPromiseBase, PromiseUtils } from "./types"
 
-export default function addPromiseMethods<T>(p: XPromiseBase<T> & ExposedState<T>, cancel: () => void): XPromise<T> {
+export function addPromiseMethods<T>(p: XPromiseBase<T> & ExposedState<T>, cancel: () => void): XPromise<T> {
     const instance = Object.assign(p, {
         catch(onrejected, sync) {
             return p.then(undefined, onrejected, sync)

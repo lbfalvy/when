@@ -13,7 +13,7 @@ export type AnyEventTarget<T extends string, U> =
         off(event: T, callback: (object: U) => void): void
     }
 
-export default function event<T extends string, U>(target: AnyEventTarget<T, U>, event: T): XPromise<U> {
+export function event<T extends string, U>(target: AnyEventTarget<T, U>, event: T): XPromise<U> {
     type Eventfunc = (event: T, cb: (object: U) => void) => void
     const [rval, resolve, _, onCancel] = flatXPromise<U>()
     let subscribe: Eventfunc, unsubscribe: Eventfunc

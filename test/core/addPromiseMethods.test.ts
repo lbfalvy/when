@@ -1,4 +1,4 @@
-import addPromiseMethods from "../../src/core/addPromiseMethods"
+import { addPromiseMethods } from "../../src/core/addPromiseMethods"
 import { XPromise } from "../../src/core/types"
 import { assertRelay } from "./utils"
 

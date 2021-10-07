@@ -1,4 +1,4 @@
-import when from '../src/when'
+import { when } from '../src/when'
 
 describe('Wrapper function', () => {
     test('detects timeout', () => {

@@ -1,6 +1,6 @@
-import race from "../src/race"
-import flatPromise from "../src/core/flatPromise"
-import xPromise, { flatXPromise } from "../src/core/xpromise"
+import { race } from "../src/race"
+import { flatPromise } from "../src/core/flatPromise"
+import { xPromise, flatXPromise } from "../src/core/xpromise"
 import { XPromise } from "../src/core/types"
 
 describe('Promise.race but with xpromise support', () => {

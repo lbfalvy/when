@@ -3,9 +3,7 @@
         "strict": true,
         "esModuleInterop": true,
         "target": "ES6",
-        "sourceMap": true,
         "skipLibCheck": true,
-        "declaration": true,
         "moduleResolution": "node"
     },
     "exclude": [
