@@ -94,7 +94,7 @@ describe('Manages the state of an xpromise and exposes it through opaque handler
     test('onStatus calls its parameter when the promise resolves', () => {
         const { promise, execute, onStatus } = handleExecutor(resolve => resolve('foo'), flatXPromise)
         const cb = jest.fn()
-        onStatus(cb)
+        onStatus(cb, true)
         execute()
         expect(cb).toHaveBeenCalled()
     })
@@ -102,7 +102,7 @@ describe('Manages the state of an xpromise and exposes it through opaque handler
     test('onStatus calls its parameter when the promise is cancelled', () => {
         const { promise, cancel, onStatus } = handleExecutor(resolve => resolve('foo'), flatXPromise)
         const cb = jest.fn()
-        onStatus(cb)
+        onStatus(cb, true)
         cancel()
         expect(cb).toHaveBeenCalled()
     })
@@ -114,7 +114,7 @@ describe('Manages the state of an xpromise and exposes it through opaque handler
             reject('baz')
         }, flatXPromise)
         const cb = jest.fn()
-        onStatus(cb)
+        onStatus(cb, true)
         execute()
         cancel()
         expect(cb).toHaveBeenCalledTimes(1)

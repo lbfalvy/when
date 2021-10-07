@@ -1,7 +1,7 @@
 import { AnySettledState, AnyState, SettledStatus, Status } from "./BaseState"
 import flatPromise, { Reject, Resolve } from "./flatPromise"
 import isXPromise from "./isXPromise"
-import trackedVariable, { Subscriber } from "./trackedVariable"
+import { variable, Subscribe } from '@lbfalvy/mini-events'
 import { ExposedState, XPromise } from "./types"
 
 export type Executor<T> = (resolve: Resolve<T>, reject: Reject) => any
@@ -17,11 +17,11 @@ export default function handleExecutor<T>(
 ): {
     promise: PromiseWithState<T>
     execute: () => void
-    onStatus: Subscriber<Status>
+    onStatus: Subscribe<[Status]>
     cancel: () => void
 } {
     const [basePromise, resolvePromise, rejectPromise] = flatPromise<T>()
-    const [status, onStatus, setStatus] = trackedVariable<Status>('pending')
+    const [status, onStatus, setStatus] = variable<Status>('pending')
     let value: T|undefined
     function resolve(result: T | XPromise<T> | Promise<T>) {
         if (status[0] !== 'pending') return
@@ -55,14 +55,13 @@ export default function handleExecutor<T>(
             if (typeof canceller == 'function') {
                 onStatus(current => {
                     if (current == 'cancelled') canceller()
-                })
+                }, true, true)
             }
         } catch(e) { reject(e) }
     }
     function getState(): AnyState<T> {
-        return promise.status == 'fulfilled' ? { status: 'fulfilled', value: promise.value }
-            : promise.status == 'rejected' ? { status: 'rejected', reason: promise.reason }
-            : promise.status == 'cancelled' ? { status: 'cancelled' } : { status: 'pending' }
+        const { status, value, reason } = promise;
+        return { status, value, reason } as any
     }
     let rejectionHandled = false
     let settle: XPromise<AnySettledState<T>>|undefined
@@ -78,7 +77,7 @@ export default function handleExecutor<T>(
             promise.catch(() => {}) // Waiting for a settle also handles rejections
             rejectionHandled = true
             if (status[0] !== 'pending') resolve(getState() as AnySettledState<T>)
-            else onStatus(() => resolve(getState() as AnySettledState<T>))
+            else onStatus(() => resolve(getState() as AnySettledState<T>), true, true)
             return fresh
         }}
     } as TypedPropertyDescriptorMap<ExposedState<T>>) as Promise<T> & ExposedState<T>

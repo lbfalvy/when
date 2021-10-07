@@ -1,6 +1,6 @@
 {
   "name": "@lbfalvy/when",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Everything you were missing from Promises",
   "main": "build/index.js",
   "module": "build/index.esm.js",
@@ -28,5 +28,8 @@
     "rollup-plugin-ts": "^1.4.2",
     "ts-jest": "^27.0.5",
     "ts-node": "^10.2.1"
+  },
+  "dependencies": {
+    "@lbfalvy/mini-events": "^1.1.0"
   }
 }

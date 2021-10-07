@@ -6,6 +6,7 @@
         "sourceMap": true,
         "skipLibCheck": true,
         "declaration": true,
+        "moduleResolution": "node"
     },
     "exclude": [
         "jest.config.ts"

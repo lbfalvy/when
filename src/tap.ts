@@ -1,4 +1,4 @@
-import xPromise, { flatXPromise } from "./core/xpromise";
+import { flatXPromise } from "./core/xpromise";
 import { XPromise } from "./core/types";
 
 /**

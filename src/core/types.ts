@@ -8,7 +8,7 @@ export type ExposedState<T> = AnyState<T> & {
 }
 
 export interface XPromiseBase<T> extends Promise<T> {
-    then<U = any, V = never>(
+    then<U = T, V = never>(
         fulfilled?: Handler<T, U>,
         rejected?: Handler<any, V>,
         sync?: 'sync'|void
