@@ -55,7 +55,7 @@ promise.cancel(when(2000).then).then(result => {}, err => {})
 ```ts
 // A good use case may be to connect to the first available of several servers.
 const promises = ['server1', 'server2', 'server3'].map(tryConnect)
-const either = when.race(promises)
+const either = when.any(promises)
 promises.forEach(p => p.cancel(either.then))
 ```
 
@@ -132,6 +132,6 @@ when.resolve(data) // Promise.resolve
 when.reject(error) // Promise.reject
 when.cancel()
 when.all([new Promise(), when(foo)]) // Promise.all
-when.race([new Promise(), when(foo)]) // Promise.race
+when.any([new Promise(), when(foo)]) // Promise.any
 when.allSettled([new Promise(), when(foo)]) // Promise.allSettled
 ```

@@ -9,7 +9,7 @@ import { XPromise, XPromiseBase } from "./core/types"
 import { xPromise, eagerXPromise, flatXPromise } from "./core/xpromise"
 import { event, AnyEventTarget } from "./event"
 import { cancel, reject, resolve } from "./primitives"
-import { race } from "./race"
+import { any } from "./any"
 import { tap } from "./tap"
 import { timeout } from "./timeout"
 
@@ -39,7 +39,7 @@ interface When {
     tap: typeof tap
     cb: typeof callback
     all: typeof all
-    race: typeof race
+    any: typeof any
     allSettled: typeof allSettled
     isXPromise: typeof isXPromise
 }
@@ -48,7 +48,7 @@ const mainFunc = Object.assign(when, {
     eager: eagerXPromise,
     cb: callback,
     tap,
-    all, race, allSettled,
+    all, any, allSettled,
     resolve, reject, cancel,
     isXPromise
 } as When)
