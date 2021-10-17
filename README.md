@@ -5,10 +5,12 @@ The core API mimics the promise API, but it has a couple extensions.
 By default all promises in `when` are lazy, that is, the executor doesn't run until the first `then` call. This can save you bandwidth or other resources and it allows you to space out your network requests without the help of a separate data fetching library. If you need an eager promise, use `when.eager`. If the executor has side effects, consider using the [[#Exposed]] form instead.
 
 ## Synchronous mode
-`then` has a third optionsl argument, which is the string 'sync'. If this is present, both fulfill and reject handlers will be called synchronously. Use this sparingly, timing sensitivity is generally not a good thing. Catch and finally both also have this argument.
+`then` has a third optionsl argument, which is the string 'sync'. If this is present, both fulfill and reject handlers will be called synchronously. Use this sparingly, timing sensitivity is generally not a good thing. Catch and finally both also have this argument. You can also pass 'sync' to when, both in the flat and executor-based
+formats, to apply the switch to all "then" calls. This is useful for unit testing.
 
 ```ts
 promise.then(result => {}, err => {}, 'sync')
+const [promise, resolve, reject, cancel] = when('sync')
 ```
 
 ## Cancelable promises
